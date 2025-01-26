@@ -1,0 +1,3 @@
+[submodule "smallMSVC"]
+	path = smallMSVC
+	url = https://github.com/bad-Al-code/msvc
