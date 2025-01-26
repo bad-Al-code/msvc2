@@ -4,7 +4,7 @@ import { json } from 'body-parser';
 import { currentUserRouter } from './routes/currentUser.route';
 import { siginRouter } from './routes/signin.route';
 import { signoutRouter } from './routes/signout.route';
-import { signupRouter } from './routes/signUp';
+import { signupRouter } from './routes/signup.route';
 
 const app = express();
 app.use(json());
