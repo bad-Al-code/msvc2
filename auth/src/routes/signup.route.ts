@@ -1,5 +1,7 @@
 import express, { Request, Response } from 'express';
 import { validationResult, body, Result } from 'express-validator';
+import { RequestValidationError } from '../errors/requestValidation.error';
+import { DatabaseConnectionError } from '../errors/databaseConnection.error';
 
 const router = express.Router();
 
@@ -16,8 +18,7 @@ router.post(
         const errors: Result = validationResult(req);
 
         if (!errors.isEmpty()) {
-            res.status(400).send(errors.array());
-            return;
+            throw new RequestValidationError(errors.array());
         }
 
         const { email, password } = req.body;
