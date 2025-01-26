@@ -1,5 +1,4 @@
 import express from 'express';
-import { json } from 'body-parser';
 
 import { currentUserRouter } from './routes/currentUser.route';
 import { siginRouter } from './routes/signin.route';
@@ -7,7 +6,8 @@ import { signoutRouter } from './routes/signout.route';
 import { signupRouter } from './routes/signup.route';
 
 const app = express();
-app.use(json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(currentUserRouter);
 app.use(siginRouter);
