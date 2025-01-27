@@ -9,14 +9,7 @@ describe('Current User Route', () => {
      * @expect Responds with the current user's email and a 200 status code
      */
     it('should respond with details about the current user', async () => {
-        const authResponse = await request(app)
-            .post('/api/users/signup')
-            .send({
-                email: 'test@test.com',
-                password: 'password',
-            })
-            .expect(201);
-        const cookie = authResponse.get('Set-Cookie');
+        const cookie = await global.signin();
 
         const response = await request(app)
             .get('/api/users/currentUser')
