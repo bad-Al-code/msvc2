@@ -1,26 +1,32 @@
+import { beforeAll, beforeEach, afterAll } from 'vitest';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 
-import { app } from '../app';
-
-let mongo: any;
+let mongo: MongoMemoryServer | null = null;
 
 beforeAll(async () => {
-    mongo = new MongoMemoryServer();
-    const mongoUri = await mongo.getUri();
+    process.env.JWT_KEY = 'test_jwt_key';
+    mongo = await MongoMemoryServer.create();
+    const mongoUri = mongo.getUri();
 
     await mongoose.connect(mongoUri);
 });
 
 beforeEach(async () => {
+    if (!mongoose.connection.readyState) return;
+
     const collections = await mongoose.connection.db!.collections();
 
-    for (let collection of collections) {
+    for (const collection of collections) {
         await collection.deleteMany({});
     }
 });
 
 afterAll(async () => {
-    await mongo.stop();
-    await mongoose.connection.close();
+    if (mongo) {
+        await mongo.stop();
+    }
+    if (mongoose.connection.readyState) {
+        await mongoose.connection.close();
+    }
 });
