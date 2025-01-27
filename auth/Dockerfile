@@ -1,7 +1,7 @@
 FROM node:alpine3.20 AS build
 WORKDIR /app
 COPY package.json . 
-RUN npm install
+RUN npm install --omit=dev
 COPY . . 
 
 FROM node:alpine3.20
