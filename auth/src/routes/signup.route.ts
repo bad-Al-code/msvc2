@@ -1,8 +1,10 @@
 import express, { Request, Response } from 'express';
 import { validationResult, body, Result } from 'express-validator';
+import jwt from 'jsonwebtoken';
+
 import { RequestValidationError } from '../errors/requestValidation.error';
-import { User } from '../models/user.model';
 import { BadRequestError } from '../errors/badRequest.error';
+import { User } from '../models/user.model';
 
 const router = express.Router();
 
@@ -29,9 +31,12 @@ router.post(
             throw new BadRequestError('Email in use');
         }
 
-        // TODO: hash the password
         const user = new User({ email, password });
         await user.save();
+
+        const userJwt = jwt.sign({ id: user.id, email: user.email }, 'asdf');
+
+        req.session = { jwt: userJwt };
 
         res.status(201).send(user);
     },
