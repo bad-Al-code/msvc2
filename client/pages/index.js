@@ -1,4 +1,4 @@
-import axios from 'axios';
+import buildClient from '../api/buildClient';
 
 const Page = ({ currentUser }) => {
     console.log(currentUser);
@@ -6,24 +6,12 @@ const Page = ({ currentUser }) => {
 
     return <h1 className="text-3xl font-bold underline">Hello world!</h1>;
 };
-Page.getInitialProps = async ({ req }) => {
-    if (typeof window === 'undefined') {
-        const { data } = await axios.get(
-            /** <service-name>.<namespace>.svc.cluster.local */
-            'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/api/users/currentUser',
-            {
-                headers: req.headers,
-            }
-        );
+Page.getInitialProps = async (context) => {
+    const client = buildClient(context);
 
-        return data;
-    } else {
-        const response = await axios.get('/api/users/currentUser');
+    const { data } = await client.get('/api/users/currentUser');
 
-        return response.data;
-    }
-
-    return {};
+    return data;
 };
 
 export default Page;
