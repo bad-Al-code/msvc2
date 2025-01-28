@@ -16,8 +16,8 @@ const start = async () => {
 
     const server = http.createServer(app);
 
-    server.listen(3001, () => {
-        console.log('Auth service running on port 3001!');
+    server.listen(3000, () => {
+        console.log('Auth service running on port 3000!');
     });
 };
 
