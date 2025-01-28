@@ -18,3 +18,11 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: badal1/client-next
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'app/**/*.js'
+            dest: .
