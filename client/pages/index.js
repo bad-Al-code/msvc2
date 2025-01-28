@@ -1,10 +1,7 @@
 import buildClient from '../api/buildClient';
 
 const Page = ({ currentUser }) => {
-    console.log(currentUser);
-    // axios.get('/api/users/currentUser');
-
-    return <h1 className="text-3xl font-bold underline">Hello world!</h1>;
+    return currentUser ? <h1>User Signed In</h1> : <h1>User NOT signed in</h1>;
 };
 Page.getInitialProps = async (context) => {
     const client = buildClient(context);
