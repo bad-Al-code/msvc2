@@ -1,0 +1,33 @@
+
+apiVersion: apps/v1 
+kind: Deployment 
+metadata:
+  name: tikets-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tikets-mongo 
+  template:
+    metadata:
+      labels: 
+        app: tikets-mongo
+    spec:
+      containers:
+        - name: tikets-mongo
+          image: mongo:5.0.29-focal
+
+--- 
+apiVersion: v1 
+kind: Service 
+metadata:
+  name: tikets-mongo-srv 
+spec:
+  type: ClusterIP
+  selector:
+    app: tikets-mongo
+  ports:
+    - name: db 
+      protocol: TCP 
+      port: 27017 
+      targetPort: 27017
