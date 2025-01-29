@@ -1,3 +1,6 @@
 [submodule "smallMSVC"]
 	path = smallMSVC
 	url = https://github.com/bad-Al-code/msvc
+[submodule "common"]
+	path = common
+	url = https://github.com/bad-Al-code/common.git

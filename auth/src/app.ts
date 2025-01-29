@@ -6,7 +6,7 @@ import { currentUserRouter } from './routes/currentUser.route';
 import { siginRouter } from './routes/signin.route';
 import { signoutRouter } from './routes/signout.route';
 import { signupRouter } from './routes/signup.route';
-import { errorHandler } from './middlewares/errorHandler.middleware';
+import { errorHandler } from '@badalcodeorg/common';
 
 const app = express();
 app.set('trust proxy', true);

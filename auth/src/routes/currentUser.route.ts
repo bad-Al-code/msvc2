@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { currentUser } from '../middlewares/currentUser.middleware';
+import { currentUser } from '@badalcodeorg/common';
 
 const router = express.Router();
 
