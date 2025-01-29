@@ -1,11 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import buildClient from '../api/buildClient';
+import Header from '../components/Header';
 
-const AppComponent = ({ Component, pageProps }) => {
+const AppComponent = ({ Component, pageProps, currentUser }) => {
     return (
         <div>
-            {' '}
-            <h1>Header</h1> <Component {...pageProps} />
+            <Header currentUser={currentUser} />
+            <Component {...pageProps} />
         </div>
     );
 };
