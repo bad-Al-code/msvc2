@@ -13,6 +13,7 @@ stan.on('connect', () => {
         id: '123',
         title: 'connect',
         price: 20,
+        name: 'asd',
     });
 
     stan.publish('ticket:created', data, () => {
