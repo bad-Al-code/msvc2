@@ -3,6 +3,7 @@ import 'express-async-errors';
 import cookieSession from 'cookie-session';
 
 import { errorHandler, NotFoundError } from '@badalcodeorg/common';
+import { createTickerRouter } from './routes/new.route';
 
 const app = express();
 app.set('trust proxy', true);
@@ -15,6 +16,7 @@ app.use(
     }),
 );
 
+app.use(createTickerRouter);
 
 app.all('*', async (req, res) => {
     throw new NotFoundError();
