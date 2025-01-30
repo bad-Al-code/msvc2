@@ -10,6 +10,13 @@ const stan = nats.connect('ticketing', crypto.randomUUID(), {
 stan.on('connect', () => {
     console.log('NATS listener');
 
+    stan.on('close', () => {
+        console.log('NAT close');
+        process.exit();
+    });
+
+    const options = stan.subscriptionOptions().setManualAckMode(true);
+
     const subscription = stan.subscribe(
         'ticket:created',
         'ordersServiceQueueGroup',
@@ -23,5 +30,10 @@ stan.on('connect', () => {
                 `Reveiced event #${msg.getSequence()}, with data: ${data}`,
             );
         }
+
+        msg.ack();
     });
 });
+
+process.on('SIGINT', () => stan.close());
+process.on('SIGTERM', () => stan.close());
