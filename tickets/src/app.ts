@@ -1,6 +1,7 @@
 import express from 'express';
 import 'express-async-errors';
 import cookieSession from 'cookie-session';
+import { currentUser } from '@badalcodeorg/common';
 
 import { errorHandler, NotFoundError } from '@badalcodeorg/common';
 import { createTickerRouter } from './routes/new.route';
@@ -16,6 +17,7 @@ app.use(
     }),
 );
 
+app.use(currentUser);
 app.use(createTickerRouter);
 
 app.all('*', async (req, res) => {
