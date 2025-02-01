@@ -18,9 +18,6 @@ describe('New Ticket', () => {
             .set('Cookie', global.signin())
             .send({});
 
-        console.log(response.status);
-        console.log(response.headers);
-
         expect(response.status).not.toEqual(401);
     });
 
@@ -31,9 +28,48 @@ describe('New Ticket', () => {
             .expect(401);
     });
 
-    it('return an error if an invalid title is provided', async () => {});
+    it('return an error if an invalid title is provided', async () => {
+        await request(app)
+            .post('/api/tickets')
+            .set('Cookie', global.signin())
+            .send({
+                title: '',
+                price: 10,
+            })
+            .expect(400);
+        await request(app)
+            .post('/api/tickets')
+            .set('Cookie', global.signin())
+            .send({
+                price: 10,
+            })
+            .expect(400);
+    });
 
-    it('returns an error if an invaid price is provided', async () => {});
+    it('returns an error if an invaid price is provided', async () => {
+        await request(app)
+            .post('/api/tickets')
+            .set('Cookie', global.signin())
+            .send({
+                title: 'Title',
+                price: -12,
+            })
+            .expect(400);
 
-    it('create a ticket with valid inputs', async () => {});
+        await request(app)
+            .post('/api/tickets')
+            .set('Cookie', global.signin())
+            .send({
+                title: 'Title',
+            })
+            .expect(400);
+    });
+
+    it('create a ticket with valid inputs', async () => {
+        // TODO: make sure to ticket is saved
+        await request(app)
+            .post('/api/ticket')
+            .send({ title: 'Title', price: 10 })
+            .expect(201);
+    });
 });
