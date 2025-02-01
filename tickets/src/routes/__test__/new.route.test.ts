@@ -2,8 +2,7 @@ import request from 'supertest';
 import { describe, expect, it } from 'vitest';
 
 import { app } from '../../app';
-import { requireAuth } from '@badalcodeorg/common';
-import { response } from 'express';
+import { Ticket } from '../../models/ticket.model';
 
 describe('New Ticket', () => {
     it('has a router handler listnening to /api/tickets for post requests', async () => {
@@ -66,10 +65,20 @@ describe('New Ticket', () => {
     });
 
     it('create a ticket with valid inputs', async () => {
-        // TODO: make sure to ticket is saved
+        let tickets = await Ticket.find({});
+        expect(tickets.length).toEqual(0);
+
+        let title = 'Title';
+
         await request(app)
-            .post('/api/ticket')
-            .send({ title: 'Title', price: 10 })
+            .post('/api/tickets')
+            .set('Cookie', global.signin())
+            .send({ title, price: 10 })
             .expect(201);
+
+        tickets = await Ticket.find({});
+        expect(tickets.length).toEqual(1);
+        expect(tickets[0].price).toEqual(10);
+        expect(tickets[0].title).toEqual(title);
     });
 });
