@@ -5,6 +5,7 @@ import { currentUser } from '@badalcodeorg/common';
 
 import { errorHandler, NotFoundError } from '@badalcodeorg/common';
 import { createTickerRouter } from './routes/new.route';
+import { showTicketRouter } from './routes/show.route';
 
 const app = express();
 app.set('trust proxy', true);
@@ -18,7 +19,9 @@ app.use(
 );
 
 app.use(currentUser);
+
 app.use(createTickerRouter);
+app.use(showTicketRouter);
 
 app.all('*', async (req, res) => {
     throw new NotFoundError();
