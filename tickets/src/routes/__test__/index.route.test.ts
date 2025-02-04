@@ -21,7 +21,6 @@ describe('Retrive all tickets', () => {
             .send()
             .expect(200);
 
-        console.log(respone.body);
         expect(respone.body.length).toEqual(3);
     });
 });
