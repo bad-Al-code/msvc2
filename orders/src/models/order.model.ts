@@ -1,6 +1,8 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import { OrderStatus } from '@badalcodeorg/common';
 
+import { TicketDoc } from './ticket.model';
+
 interface OrderAttrs {
     userId: string;
     status: OrderStatus;
