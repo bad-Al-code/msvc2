@@ -7,7 +7,7 @@ export const natsWrapper = {
             .mockImplementation(
                 (subject: string, data: string, callback: () => void) => {
                     console.log(`Mock NATS Publish: ${subject}`);
-                    callback(); // Simulate a successful publish event
+                    callback();
                 },
             ),
     },

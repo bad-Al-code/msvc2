@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, afterAll } from 'vitest';
+import { vi, beforeAll, beforeEach, afterAll } from 'vitest';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import request from 'supertest';
@@ -21,6 +21,7 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+    vi.clearAllMocks();
     if (!mongoose.connection.readyState) return;
 
     const collections = await mongoose.connection.db!.collections();

@@ -70,7 +70,7 @@ describe('New Ticket', () => {
         let tickets = await Ticket.find({});
         expect(tickets.length).toEqual(0);
 
-        let title = 'Title';
+        const title = 'Title';
 
         await request(app)
             .post('/api/tickets')
@@ -82,5 +82,17 @@ describe('New Ticket', () => {
         expect(tickets.length).toEqual(1);
         expect(tickets[0].price).toEqual(10);
         expect(tickets[0].title).toEqual(title);
+    });
+
+    it('should publish a event', async () => {
+        const title = 'Title';
+
+        await request(app)
+            .post('/api/tickets')
+            .set('Cookie', global.signin())
+            .send({ title, price: 10 })
+            .expect(201);
+
+        expect(natsWrapper.client.publish).toHaveBeenCalled();
     });
 });

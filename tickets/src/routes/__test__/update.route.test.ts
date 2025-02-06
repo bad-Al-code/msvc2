@@ -83,4 +83,20 @@ describe('Update a ticket', () => {
         expect(ticketResponse.body.title).toEqual('New Title');
         expect(ticketResponse.body.price).toEqual(10);
     });
+
+    it('should publish an event', async () => {
+        const cookie = global.signin();
+        const response = await request(app)
+            .post('/api/tickets')
+            .set('Cookie', cookie)
+            .send({ title: 'Title', price: 10 });
+
+        await request(app)
+            .put(`/api/tickets/${response.body.id}`)
+            .set('Cookie', cookie)
+            .send({ title: 'New Title', price: 10 })
+            .expect(200);
+
+        expect(natsWrapper.client.publish).toHaveBeenCalled();
+    });
 });
