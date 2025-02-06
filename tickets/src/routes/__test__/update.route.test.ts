@@ -1,8 +1,9 @@
 import request from 'supertest';
 import { describe, expect, it } from 'vitest';
+import mongoose from 'mongoose';
 
 import { app } from '../../app';
-import mongoose from 'mongoose';
+import { natsWrapper } from '../../natsWrapper';
 
 describe('Update a ticket', () => {
     it('returns a 404 if the provided id does not exist', async () => {

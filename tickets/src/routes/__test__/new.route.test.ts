@@ -1,8 +1,10 @@
 import request from 'supertest';
-import { describe, expect, it } from 'vitest';
+import { vi, describe, expect, it } from 'vitest';
 
 import { app } from '../../app';
 import { Ticket } from '../../models/ticket.model';
+
+import { natsWrapper } from '../../natsWrapper';
 
 describe('New Ticket', () => {
     it('has a router handler listnening to /api/tickets for post requests', async () => {
