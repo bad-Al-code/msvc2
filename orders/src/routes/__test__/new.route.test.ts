@@ -52,4 +52,7 @@ describe('New Order', () => {
             .send({ ticketId: ticket.id })
             .expect(201);
     });
+
+    // TODO:
+    it.todo('emits an order created event');
 });

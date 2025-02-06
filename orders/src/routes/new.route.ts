@@ -14,7 +14,7 @@ import { Order } from '../models/order.model';
 
 const router = Router();
 
-// const EXPIRATION_WINDOW_SECONDS = 15 * 60;
+const EXPIRATION_WINDOW_SECONDS = 15 * 60;
 
 router.post(
     '/api/orders',
@@ -52,8 +52,7 @@ router.post(
 
         const expiration = new Date();
         expiration.setSeconds(
-            expiration.getSeconds() +
-                Number(process.env.EXPIRATION_WINDOW_SECONDS),
+            expiration.getSeconds() + EXPIRATION_WINDOW_SECONDS,
         );
 
         const order = Order.build({
@@ -65,8 +64,7 @@ router.post(
 
         await order.save();
 
-        res.send({});
-        // res.status(201).send({ order });
+        res.status(201).send({ order });
     },
 );
 
