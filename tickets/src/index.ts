@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import http from 'node:http';
 
 import { app } from './app';
-import { natsWrraper } from './natsWrapper';
+import { natsWrapper } from './natsWrapper';
 
 const start = async () => {
     if (!process.env.JWT_KEY) {
@@ -12,11 +12,20 @@ const start = async () => {
         throw new Error('MONGO_URI is not provided');
     }
     try {
-        await natsWrraper.connect(
+        await natsWrapper.connect(
             'ticketing',
             'klasdj',
             'http://nats-srv:4222',
         );
+
+        natsWrapper.client.on('close', () => {
+            console.log('NATS connection closed!');
+            process.exit();
+        });
+
+        process.on('SIGINT', () => natsWrapper.client.close());
+        process.on('SIGTERM', () => natsWrapper.client.close());
+
         await mongoose.connect(process.env.MONGO_URI);
         console.log('Connected to DB');
     } catch (error) {

@@ -4,7 +4,7 @@ import { body } from 'express-validator';
 
 import { Ticket } from '../models/ticket.model';
 import { TicketCreatedPublisher } from '../events/publishers/ticketCreted.publisher';
-import { natsWrraper } from '../natsWrapper';
+import { natsWrapper } from '../natsWrapper';
 
 const router = express.Router();
 
@@ -30,7 +30,7 @@ router.post(
 
         await ticket.save();
 
-        new TicketCreatedPublisher(natsWrraper.client).publish({
+        new TicketCreatedPublisher(natsWrapper.client).publish({
             id: ticket.id,
             title: ticket.title,
             price: ticket.price,
