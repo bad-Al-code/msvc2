@@ -46,8 +46,6 @@ describe('FetchTicket', () => {
             .set('Cookie', userTwo)
             .expect(200);
 
-        console.log(orderOne.order.id);
-
         expect(response.body[0].id).toEqual(orderOne.order.id);
         expect(response.body[1].id).toEqual(orderTwo.order.id);
         expect(response.body[0].ticket.id).toEqual(ticketTwo.id);
