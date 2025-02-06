@@ -11,11 +11,20 @@ const start = async () => {
     if (!process.env.MONGO_URI) {
         throw new Error('MONGO_URI is not provided');
     }
+    if (!process.env.NATS_CLIENT_ID) {
+        throw new Error('NATS_CLIENT_ID is not provided');
+    }
+    if (!process.env.NATS_CLUSTER_ID) {
+        throw new Error('NATS_CLUSTER_ID is not provided');
+    }
+    if (!process.env.NATS_URL) {
+        throw new Error('NATS_URL is not provided');
+    }
     try {
         await natsWrapper.connect(
-            'ticketing',
-            'klasdj',
-            'http://nats-srv:4222',
+            process.env.NATS_CLUSTER_ID,
+            process.env.NATS_CLIENT_ID,
+            process.env.NATS_URL,
         );
 
         natsWrapper.client.on('close', () => {
