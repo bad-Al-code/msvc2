@@ -5,7 +5,7 @@ import {
     validateRequest,
 } from '@badalcodeorg/common';
 import express, { Request, Response } from 'express';
-import { body } from 'express-validator';
+import { param } from 'express-validator';
 import { Types } from 'mongoose';
 
 import { Order } from '../models/order.model';
@@ -16,21 +16,23 @@ router.get(
     '/api/orders/:orderId',
     requireAuth,
     [
-        body('orderId')
+        param('orderId')
             .not()
             .isEmpty()
-            .custom((input: string) => Types.ObjectId.isValid)
+            .custom((input: string) => Types.ObjectId.isValid(input))
             .withMessage('Order Id mustbe valid'),
     ],
     validateRequest,
     async (req: Request, res: Response) => {
-        const order = await Order.findById(req.params.id).populate('ticket');
+        const order = await Order.findById(req.params.orderId).populate(
+            'ticket',
+        );
 
         if (!order) {
             throw new NotFoundError();
         }
 
-        if (order.userId === req.currentUser!.id) {
+        if (order.userId !== req.currentUser!.id) {
             throw new NotAuthorizedError();
         }
 
