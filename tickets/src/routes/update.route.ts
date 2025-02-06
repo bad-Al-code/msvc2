@@ -9,6 +9,10 @@ import {
     validateRequest,
 } from '@badalcodeorg/common';
 
+import { TicketUpdatedEvent } from '@badalcodeorg/common';
+import { natsWrapper } from '../natsWrapper';
+import { TicketUpdatedPublisher } from '../events/publishers/ticketUpdate.publisher';
+
 const router = express.Router();
 
 router.put(
@@ -34,6 +38,13 @@ router.put(
 
         ticket.set({ title: req.body.title, price: req.body.price });
         await ticket.save();
+
+        new TicketUpdatedPublisher(natsWrapper.client).publish({
+            id: ticket.id,
+            title: ticket.title,
+            price: ticket.price,
+            userId: ticket.userId,
+        });
 
         res.send(ticket);
     },
