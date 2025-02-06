@@ -1,15 +1,15 @@
-import mongoose, { Model, Schema } from 'mongoose';
+import mongoose, { Model, Schema, Document } from 'mongoose';
 
 import { Order, OrderStatus } from './order.model';
 
 interface TicketAttrs {
     title: string;
-    price: string;
+    price: number;
 }
 
-export interface TicketDoc extends TicketAttrs {
+export interface TicketDoc extends Document, TicketAttrs {
     title: string;
-    price: string;
+    price: number;
     isReserved(): Promise<boolean>;
 }
 
@@ -21,7 +21,7 @@ const ticketSchema = new Schema(
     {
         title: {
             type: String,
-            requried: true,
+            required: true,
         },
         price: {
             type: Number,
