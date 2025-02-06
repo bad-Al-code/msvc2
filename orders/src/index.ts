@@ -44,7 +44,7 @@ const start = async () => {
     const server = http.createServer(app);
 
     server.listen(3000, () => {
-        console.log('Auth service running on port 3000!');
+        console.log('Orders service running on port 3000!');
     });
 };
 

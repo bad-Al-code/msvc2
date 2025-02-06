@@ -4,10 +4,10 @@ import cookieSession from 'cookie-session';
 import { currentUser } from '@badalcodeorg/common';
 
 import { errorHandler, NotFoundError } from '@badalcodeorg/common';
-import { createTickerRouter } from './routes/new.route';
-import { showTicketRouter } from './routes/show.route';
-import { indexTicketRouter } from './routes/index.router';
-import { updateTicketRouter } from './routes/update.route';
+import { listOrderTicket } from './routes/lists.route';
+import { showOrderRouter } from './routes/show.route';
+import { deleteOrderRouter } from './routes/delete.route';
+import { newOrderRouter } from './routes/new.route';
 
 const app = express();
 app.set('trust proxy', true);
@@ -22,10 +22,10 @@ app.use(
 
 app.use(currentUser);
 
-app.use(createTickerRouter);
-app.use(showTicketRouter);
-app.use(indexTicketRouter);
-app.use(updateTicketRouter);
+app.use(listOrderTicket);
+app.use(showOrderRouter);
+app.use(deleteOrderRouter);
+app.use(newOrderRouter);
 
 app.all('*', async (req, res) => {
     throw new NotFoundError();
