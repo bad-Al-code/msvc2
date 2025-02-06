@@ -20,7 +20,7 @@ router.get(
             .not()
             .isEmpty()
             .custom((input: string) => Types.ObjectId.isValid(input))
-            .withMessage('Order Id mustbe valid'),
+            .withMessage('Order Id must be valid'),
     ],
     validateRequest,
     async (req: Request, res: Response) => {
