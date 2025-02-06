@@ -4,7 +4,7 @@ import cookieSession from 'cookie-session';
 import { currentUser } from '@badalcodeorg/common';
 
 import { errorHandler, NotFoundError } from '@badalcodeorg/common';
-import { listOrderTicket } from './routes/lists.route';
+import { listOrderTicket } from './routes/index.route';
 import { showOrderRouter } from './routes/show.route';
 import { deleteOrderRouter } from './routes/delete.route';
 import { newOrderRouter } from './routes/new.route';
