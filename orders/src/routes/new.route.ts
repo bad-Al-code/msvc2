@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
 import {
+    BadRequestError,
     NotFoundError,
     OrderStatus,
     requireAuth,
@@ -30,7 +31,7 @@ router.post(
         /**
          * TODO:
          * 1. Find the ticket the user is trying to order in the database
-         * 2.Ticket is not already reserved
+         * 2. Ticket is not already reserved
          * 3. Calculate expiration date or this order
          * 4. Build the order and save to the database
          * 5. Publish event, order:created
@@ -41,6 +42,12 @@ router.post(
         const ticket = await Ticket.findById(ticketId);
         if (!ticket) {
             throw new NotFoundError();
+        }
+
+        const isReserved = await ticket.isReserved();
+
+        if (isReserved) {
+            throw new BadRequestError('Ticket is already reserved');
         }
 
         const expiration = new Date();
@@ -58,7 +65,8 @@ router.post(
 
         await order.save();
 
-        res.status(201).send({ order });
+        res.send({});
+        // res.status(201).send({ order });
     },
 );
 
