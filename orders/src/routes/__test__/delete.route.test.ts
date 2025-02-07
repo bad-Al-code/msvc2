@@ -6,6 +6,7 @@ import { OrderStatus } from '@badalcodeorg/common';
 import { app } from '../../app';
 import { Order } from '../../models/order.model';
 import { Ticket } from '../../models/ticket.model';
+import { natsWrapper } from '../../natsWrapper';
 
 describe('Delete Order', () => {
     it('should cancel an order successfully', async () => {
@@ -77,5 +78,28 @@ describe('Delete Order', () => {
             .set('Cookie', userTwo)
             .send()
             .expect(401);
+    });
+
+    it('should emit an order cancelled event', async () => {
+        const ticket = Ticket.build({ title: 'Concert', price: 50 });
+        await ticket.save();
+
+        const user = global.signin();
+
+        const orderResponse = await request(app)
+            .post('/api/orders')
+            .set('Cookie', user)
+            .send({ ticketId: ticket.id })
+            .expect(201);
+
+        const orderId = orderResponse.body.order.id;
+
+        await request(app)
+            .delete(`/api/orders/${orderId}`)
+            .set('Cookie', user)
+            .send()
+            .expect(204);
+
+        expect(natsWrapper.client.publish).toHaveBeenCalled();
     });
 });

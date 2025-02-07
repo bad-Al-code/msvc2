@@ -1,10 +1,11 @@
 import request from 'supertest';
-import { describe, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { Types } from 'mongoose';
 
 import { app } from '../../app';
 import { Order, OrderStatus } from '../../models/order.model';
 import { Ticket } from '../../models/ticket.model';
+import { natsWrapper } from '../../natsWrapper';
 
 describe('New Order', () => {
     it('should returns an error if the ticket does not exists', async () => {
@@ -53,6 +54,19 @@ describe('New Order', () => {
             .expect(201);
     });
 
-    // TODO:
-    it.todo('emits an order created event');
+    it('emits an order created event', async () => {
+        const ticket = Ticket.build({
+            title: 'Title',
+            price: 10,
+        });
+        await ticket.save();
+
+        await request(app)
+            .post('/api/orders')
+            .set('Cookie', global.signin())
+            .send({ ticketId: ticket.id })
+            .expect(201);
+
+        expect(natsWrapper.client.publish).toHaveBeenCalled();
+    });
 });
