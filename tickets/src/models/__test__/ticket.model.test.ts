@@ -32,16 +32,12 @@ describe('Ticket Model habdle concurrency ', () => {
         });
 
         await ticket.save();
-        console.log(ticket);
-
         expect(ticket.version).toEqual(0);
 
         await ticket.save();
-        console.log(ticket);
         expect(ticket.version).toEqual(1);
 
         await ticket.save();
-        console.log(ticket);
         expect(ticket.version).toEqual(2);
     });
 });
