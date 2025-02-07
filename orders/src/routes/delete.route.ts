@@ -35,6 +35,8 @@ router.delete(
             throw new NotFoundError();
         }
 
+        const ticket = order.ticket;
+
         if (order.userId !== req.currentUser!.id) {
             throw new NotAuthorizedError();
         }
@@ -45,8 +47,9 @@ router.delete(
 
         new OrderCancelledPublisher(natsWrapper.client).publish({
             id: order.id,
+            version: ticket.version,
             ticket: {
-                id: order.ticket.id,
+                id: ticket.id,
             },
         });
 
