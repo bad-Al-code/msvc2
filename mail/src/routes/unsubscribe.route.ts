@@ -13,7 +13,7 @@ router.post(
         try {
             const { email } = req.body;
             const result = await unsubscribedUser(email);
-            res.json(result);
+            res.json({ result });
         } catch (error) {
             res.status(500).json({ error: 'Failed to unsubscribe' });
         }
