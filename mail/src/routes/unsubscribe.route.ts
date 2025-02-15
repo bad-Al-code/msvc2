@@ -1,23 +1,18 @@
-import { Request, Response, Router } from 'express';
-
-import { validate } from '../middleware/validate.middleware';
-import { unsubscribeSchema } from '../validations/unsubscribe.validation';
-import { unsubscribedUser } from '../services/unsubscribe.service';
+import { Router } from 'express';
+import { unsubscribeUser } from '../services/unsubscribe.service';
+import { validateUnsubscribe } from '../validations/unsubscribe.validation';
 
 const router = Router();
 
-router.post(
-    '/unsubscribe',
-    validate(unsubscribeSchema),
-    async (req: Request, res: Response) => {
-        try {
-            const { email } = req.body;
-            const result = await unsubscribedUser(email);
-            res.json({ result });
-        } catch (error) {
-            res.status(500).json({ error: 'Failed to unsubscribe' });
-        }
-    },
-);
+router.post('/unsubscribe', validateUnsubscribe, async (req, res) => {
+    const { email, reason } = req.body;
+
+    try {
+        const result = await unsubscribeUser(email, reason);
+        res.status(200).json({ result });
+    } catch (error: any) {
+        res.status(400).json({ error: error.message });
+    }
+});
 
 export { router as unsubscribeRouter };

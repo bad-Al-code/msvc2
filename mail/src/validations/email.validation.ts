@@ -1,8 +1,15 @@
 import { z } from 'zod';
 
-export const sendWelcomeEmailSchema = z.object({
+export const emailSchema = z.object({
     email: z.string().email({ message: 'Invalid email format' }),
     name: z.string().min(1, { message: 'Name is required' }),
 });
 
-export type SendWelcomeEmailInput = z.infer<typeof sendWelcomeEmailSchema>;
+export const validateEmail = (req: any, res: any, next: any) => {
+    try {
+        emailSchema.parse(req.body);
+        next();
+    } catch (error: any) {
+        res.status(400).json({ error: error.errors });
+    }
+};

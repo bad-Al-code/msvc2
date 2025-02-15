@@ -1,42 +1,50 @@
 import { eq } from 'drizzle-orm';
-
 import { db } from '../config/db';
-import { unsubscribedUsers, users } from '../db/schema';
+import {
+    emailLogs,
+    emailPreferences,
+    users,
+    unsubscribedHistory,
+} from '../db/schema';
 
-export const unsubscribedUser = async (email: string) => {
-    const existingUser = await db
+export const unsubscribeUser = async (email: string, reason?: string) => {
+    const [user] = await db
         .select()
         .from(users)
-        .where(eq(users.email, email));
-    if (existingUser.length === 0) {
-        return { success: false, message: 'User does not exist' };
+        .where(eq(users.email, email))
+        .limit(1);
+    if (!user) {
+        throw new Error('User not found');
     }
 
-    const isUnsubscribed = await db
+    const userId = user.id;
+
+    const [preferences] = await db
         .select()
-        .from(unsubscribedUsers)
-        .where(eq(unsubscribedUsers.email, email));
-    if (isUnsubscribed.length > 0) {
-        return {
-            success: false,
-            message:
-                'User is already unsubscribed. Use /resubscribe to subscribe again.',
-        };
+        .from(emailPreferences)
+        .where(eq(emailPreferences.userId, userId))
+        .limit(1);
+    if (preferences?.unsubscribe) {
+        throw new Error('User is already unsubscribed');
     }
 
     await db
-        .insert(unsubscribedUsers)
-        .values({ email })
-        .onDuplicateKeyUpdate({ set: { email } });
+        .update(emailPreferences)
+        .set({ unsubscribe: true })
+        .where(eq(emailPreferences.userId, userId));
 
-    return { success: true, message: 'User unsubscribed successfully' };
-};
+    await db.insert(unsubscribedHistory).values({
+        userId,
+        email,
+        reason: reason || 'No reason provided',
+    });
 
-export const isUserUnsubscribed = async (email: string): Promise<boolean> => {
-    const result = await db
-        .select()
-        .from(unsubscribedUsers)
-        .where(eq(unsubscribedUsers.email, email));
+    await db.insert(emailLogs).values({
+        userId,
+        type: 'unsubscribe',
+        status: 'success',
+        response: JSON.stringify({ message: 'User unsubscribed successfully' }),
+    });
 
-    return result.length > 0;
+    return { message: 'User unsubscribed successfully' };
 };

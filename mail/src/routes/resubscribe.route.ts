@@ -1,20 +1,19 @@
 import { Router, Request, Response } from 'express';
-import { validate } from '../middleware/validate.middleware';
 import { resubscribeUser } from '../services/resubscribe.service';
-import { resubscribeSchema } from '../validations/resubscribe.validation';
+import { validateResubscribe } from '../validations/resubscribe.validation';
 
 const router = Router();
 
 router.post(
     '/resubscribe',
-    validate(resubscribeSchema),
+    validateResubscribe,
     async (req: Request, res: Response) => {
         try {
             const { email } = req.body;
             const result = await resubscribeUser(email);
-            res.json({ result });
+            res.status(200).json({ result });
         } catch (error) {
-            res.status(500).json({ error: 'Failed to resubscribe' });
+            res.status(400).json({ error: 'Failed to resubscribe' });
         }
     },
 );
