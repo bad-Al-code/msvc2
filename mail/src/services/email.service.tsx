@@ -38,6 +38,14 @@ export const sendWelcomeEmail = async ({ to, name, type }: SendEmailParams) => {
         .limit(1);
     if (preference?.unsubscribe) {
         console.log(`Skipping email to ${to}, user is unsubscribed.`);
+
+        await db.insert(emailLogs).values({
+            userId,
+            type,
+            status: 'skipped',
+            response: JSON.stringify({ message: 'User is unsubscribed' }),
+        });
+
         return { success: false, message: 'User is unsubscribed' };
     }
 
