@@ -11,6 +11,19 @@ export const unsubscribedUser = async (email: string) => {
     if (existingUser.length === 0) {
         return { success: false, message: 'User does not exist' };
     }
+
+    const isUnsubscribed = await db
+        .select()
+        .from(unsubscribedUsers)
+        .where(eq(unsubscribedUsers.email, email));
+    if (isUnsubscribed.length > 0) {
+        return {
+            success: false,
+            message:
+                'User is already unsubscribed. Use /resubscribe to subscribe again.',
+        };
+    }
+
     await db
         .insert(unsubscribedUsers)
         .values({ email })
