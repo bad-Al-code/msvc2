@@ -14,7 +14,7 @@ router.post(
             const { email, name } = req.body;
             const result = await sendWelcomeEmail({ to: email, name });
 
-            res.json({ success: true, result });
+            res.json({ result });
         } catch (error) {
             res.status(500).json({ error: 'Failed to send email' });
         }

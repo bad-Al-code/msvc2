@@ -2,6 +2,7 @@ import React from 'react';
 import { resend } from '../config/resend';
 import { WelcomeEmail } from '../emails/WelcomeEmail';
 import { render } from '@react-email/render';
+import { isUserUnsubscribed } from './unsubscribe.service';
 
 interface SendEmailParams {
     to: string;
@@ -9,6 +10,11 @@ interface SendEmailParams {
 }
 
 export const sendWelcomeEmail = async ({ to, name }: SendEmailParams) => {
+    if (await isUserUnsubscribed(to)) {
+        console.log(`Skipping email to ${to}, user is unsubscribed.`);
+        return { success: false, message: 'User is unsubscribed' };
+    }
+
     const emailHtml = await render(<WelcomeEmail name={name} />);
 
     try {

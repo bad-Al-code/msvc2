@@ -5,7 +5,7 @@
   "scripts": {
     "start": "ts-node-dev --respawn --poll --inspect --exit-child src/index.ts",
     "migrate:generate": "drizzle-kit generate",
-    "migrate:path": "drizzle-kit push"
+    "migrate:migrate": "drizzle-kit push"
   },
   "keywords": [],
   "author": "",
