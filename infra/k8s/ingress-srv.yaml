@@ -3,9 +3,9 @@ kind: Ingress
 metadata:
   name: ingress-service
   annotations:
-    nginx.ingress.kubernetes.io/use-regex: 'true'
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
-  ingressClassName: nginx  
+  ingressClassName: nginx
   rules:
     - host: badal.org
       http:
@@ -17,24 +17,31 @@ spec:
                 name: auth-srv
                 port:
                   number: 3000
+          - path: /email(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: mail-srv
+                port:
+                  number: 3000
           - path: /api/tickets(/|$)(.*)
-            pathType: ImplementationSpecific 
-            backend: 
-              service: 
-                name: tickets-srv 
-                port: 
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: tickets-srv
+                port:
                   number: 3000
           - path: /api/orders(/|$)(.*)
-            pathType: ImplementationSpecific 
-            backend: 
-              service: 
-                name: orders-srv 
-                port: 
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: orders-srv
+                port:
                   number: 3000
           - path: /(.*)
             pathType: ImplementationSpecific
             backend:
-              service: 
+              service:
                 name: client-srv
                 port:
                   number: 3000
